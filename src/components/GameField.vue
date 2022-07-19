@@ -2,6 +2,7 @@
   <div id="container">
     <div v-for="i in 18*18" :key="i" class="tile">
       <img src="@/assets/head.png" :style="'transform: rotate('+90*head.direction+'deg)'" class="tileImg" v-if="i===head.xPosition +head.yPosition*18">
+      <img src="@/assets/body.png" class="tileImg" v-if="locations.includes(i)">
     </div>
     <div class="overlay" v-if="paused">
       <div>
@@ -16,7 +17,7 @@
     </div>
     <div class="overlay" v-if="this.head.direction === 4">
       <div style="height: 40px">
-        Press WASD to Start
+        Press Any Button to Start
       </div>
     </div>
   </div>
@@ -37,14 +38,25 @@ export default {
       locations: [],
       paused: false,
       handle: null,
+      apple: null,
     }
   },
 
   methods: {
     gameLoop() {
       if(!this.paused) {
-        //new frame every 0.7 seconds
-        setTimeout(this.gameLoop, 700)
+        //new frame every 0.5 seconds
+        setTimeout(this.gameLoop, 500)
+
+        //adds a bodypart to last position where head was if the real length doesnt match the desired length
+        if(this.bodySize === this.locations.length) {
+          this.locations.shift()
+          this.locations.push(this.head.xPosition + this.head.yPosition*18)
+        } else {
+          if(this.bodySize > this.locations.length) {
+            this.locations.push(this.head.xPosition + this.head.yPosition * 18)
+          }
+        }
 
         //calculates which direction to go and makes it impossible to go to where you were previously (cannot make a 180 deg turn)
         this.head.yPosition = this.head.direction === 0 ? this.head.yPosition-1 :
@@ -58,10 +70,12 @@ export default {
 
   mounted() {
 
-    this.gameLoop()
-
     //reacts to keydown events
     document.onkeydown = (event) => {
+      if(this.head.direction === 4) {
+        this.head.direction = 0
+        this.gameLoop()
+      }
       //change direction depending on key pressed
       if ((event.key === 'w' || event.key === 'ArrowUp') && this.head.prevDir!==2) {
         this.head.direction = 0
