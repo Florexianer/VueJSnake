@@ -1,10 +1,22 @@
 <template>
   <div id="container">
-    <div v-for="i in 18*18" :key="i" class="tile">
-      <img src="@/assets/head.png" :style="'transform: rotate('+90*head.direction+'deg)'" class="tileImg" v-if="i===head.xPosition +head.yPosition*18">
+    <div v-for="i in settings.width * settings.width" :key="i" class="tile" :style="'background-color:' +  ((i % 2 === 0) ? '#a2d149' : '#aad751')">
+      <img src="@/assets/head.png" :style="'transform: rotate('+90*head.direction+'deg)'" class="tileImg" v-if="i===head.xPosition +head.yPosition*this.settings.width">
       <img src="@/assets/body.png" class="tileImg" v-if="locations.includes(i)">
+      <img src="@/assets/apple.png" class="tileImg" v-if="i===apple">
     </div>
-    <div class="overlay" v-if="paused">
+    <div class="overlay" v-if="head.direction === 4">
+      <div style="height: 40px">
+        Press Any Button to Start
+      </div>
+    </div>
+    <div class="overlay" v-else-if="gameOver">
+
+      <div style="height: 40px">
+        Game Over
+      </div>
+    </div>
+    <div class="overlay" v-else-if="paused">
       <div>
         You paused the Game, press
         <br><br>
@@ -13,11 +25,6 @@
         </div>
         <br>
         to continue
-      </div>
-    </div>
-    <div class="overlay" v-if="this.head.direction === 4">
-      <div style="height: 40px">
-        Press Any Button to Start
       </div>
     </div>
   </div>
@@ -31,41 +38,64 @@ export default {
       head: {
         prevDir : 4,
         direction : 4,
-        xPosition: 9,
-        yPosition: 9,
+        xPosition: 4,
+        yPosition: 4,
       },
       bodySize: 3,
       locations: [],
       paused: false,
       handle: null,
       apple: null,
+      gameOver: null,
+      settings: {
+        width: 9
+      }
     }
   },
 
   methods: {
     gameLoop() {
-      if(!this.paused) {
-        //new frame every 0.5 seconds
-        setTimeout(this.gameLoop, 500)
+      if(!this.paused && !this.gameOver) {
+        //new frame every 0.4 seconds
+        setTimeout(this.gameLoop, 400)
+
+        const futureY = this.head.direction === 0 ? this.head.yPosition-1 :
+            this.head.direction === 2 ? this.head.yPosition + 1 : this.head.yPosition
+        const futureX = this.head.direction === 1 ? this.head.xPosition+1 :
+            this.head.direction === 3 ? this.head.xPosition - 1 : this.head.xPosition
 
         //adds a bodypart to last position where head was if the real length doesnt match the desired length
         if(this.bodySize === this.locations.length) {
           this.locations.shift()
-          this.locations.push(this.head.xPosition + this.head.yPosition*18)
+          this.locations.push(this.head.xPosition + this.head.yPosition*this.settings.width)
         } else {
           if(this.bodySize > this.locations.length) {
-            this.locations.push(this.head.xPosition + this.head.yPosition * 18)
+            this.locations.push(this.head.xPosition + this.head.yPosition * this.settings.width)
           }
         }
 
+        if(this.locations.includes(futureX + futureY*this.settings.width)) {
+          this.gameOver = true
+          this.paused = true
+          return
+        }
+
         //calculates which direction to go and makes it impossible to go to where you were previously (cannot make a 180 deg turn)
-        this.head.yPosition = this.head.direction === 0 ? this.head.yPosition-1 :
-            this.head.direction === 2 ? this.head.yPosition + 1 : this.head.yPosition
-        this.head.xPosition = this.head.direction === 1 ? this.head.xPosition+1 :
-            this.head.direction === 3 ? this.head.xPosition - 1 : this.head.xPosition
+        this.head.yPosition = futureY
+        this.head.xPosition = futureX
         this.head.prevDir = this.head.direction
+
+
+        if(this.apple === this.head.xPosition + this.head.yPosition*this.settings.width) {
+          this.bodySize++
+          this.apple = this.getRandomPosOnBoard()
+        }
       }
-    }
+    },
+
+    getRandomPosOnBoard() {
+      return Math.floor(Math.random() * this.settings.width * this.settings.width)+1
+    },
   },
 
   mounted() {
@@ -73,6 +103,7 @@ export default {
     //reacts to keydown events
     document.onkeydown = (event) => {
       if(this.head.direction === 4) {
+        this.apple = this.getRandomPosOnBoard()
         this.head.direction = 0
         this.gameLoop()
       }
@@ -106,18 +137,17 @@ export default {
 
 <style scoped>
 #container {
-  width: 900px;
-  height: 900px;
+  width: 700px;
+  height: 700px;
   display: flex;
   flex-wrap: wrap;
-  border: 0.5px solid black;
+  border: 10px solid black;
   margin: 0 auto;
 }
 
 .tile {
-  border: 0.5px solid black;
-  width: 48px;
-  height: 48px;
+  width: 77.7776px;
+  height: 77.77776px;
 }
 
 .tileImg {
