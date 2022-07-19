@@ -141,7 +141,7 @@ export default {
   height: 700px;
   display: flex;
   flex-wrap: wrap;
-  border: 10px solid black;
+  border: 3px solid black;
   margin: 0 auto;
 }
 
