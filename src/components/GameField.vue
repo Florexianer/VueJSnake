@@ -63,16 +63,16 @@ export default {
     //reacts to keydown events
     document.onkeydown = (event) => {
       //change direction depending on key pressed
-      if (event.key === 'w' || event.key === 'ArrowUp' && this.head.prevDir!==2) {
+      if ((event.key === 'w' || event.key === 'ArrowUp') && this.head.prevDir!==2) {
         this.head.direction = 0
       }
-      else if (event.key === 'd' || event.key === 'ArrowRight' && this.head.prevDir!==3) {
+      else if ((event.key === 'd' || event.key === 'ArrowRight') && this.head.prevDir!==3) {
         this.head.direction = 1
       }
-      else if (event.key === 's' || event.key === 'ArrowDown' && this.head.prevDir!==0) {
+      else if ((event.key === 's' || event.key === 'ArrowDown') && this.head.prevDir!==0) {
         this.head.direction = 2
       }
-      else if (event.key === 'a' || event.key === 'ArrowLeft' && this.head.prevDir!==1) {
+      else if ((event.key === 'a' || event.key === 'ArrowLeft') && this.head.prevDir!==1) {
         this.head.direction = 3
       }
       //pause the game when pressing escape
