@@ -33,8 +33,8 @@ export default {
         xPosition: 9,
         yPosition: 9,
       },
-      bodySize: 0,
-      history: [],
+      bodySize: 3,
+      locations: [],
       paused: false,
       handle: null,
     }
@@ -43,8 +43,10 @@ export default {
   methods: {
     gameLoop() {
       if(!this.paused) {
-        clearTimeout(this.handle)
-        this.handle = setTimeout(this.gameLoop, 700)
+        //new frame every 0.7 seconds
+        setTimeout(this.gameLoop, 700)
+
+        //calculates which direction to go and makes it impossible to go to where you were previously (cannot make a 180 deg turn)
         this.head.yPosition = this.head.direction === 0 ? this.head.yPosition-1 :
             this.head.direction === 2 ? this.head.yPosition + 1 : this.head.yPosition
         this.head.xPosition = this.head.direction === 1 ? this.head.xPosition+1 :
@@ -58,7 +60,9 @@ export default {
 
     this.gameLoop()
 
+    //reacts to keydown events
     document.onkeydown = (event) => {
+      //change direction depending on key pressed
       if (event.key === 'w' || event.key === 'ArrowUp' && this.head.prevDir!==2) {
         this.head.direction = 0
       }
@@ -71,11 +75,12 @@ export default {
       else if (event.key === 'a' || event.key === 'ArrowLeft' && this.head.prevDir!==1) {
         this.head.direction = 3
       }
+      //pause the game when pressing escape
       else if (event.key === 'Escape') {
         this.paused = !this.paused
         if(!this.paused) {
+          //fixes bug where you are flash when spamming pause
           clearTimeout(this.handle)
-
           this.handle = setTimeout(this.gameLoop, 300)
         }
       }
