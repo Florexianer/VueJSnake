@@ -101,7 +101,11 @@ export default {
     },
 
     getRandomPosOnBoard() {
-      return Math.floor(Math.random() * this.settings.width * this.settings.width)+1
+      let random = Math.floor(Math.random() * this.settings.width * this.settings.width)+1
+      do {
+        random = Math.floor(Math.random() * this.settings.width * this.settings.width)+1
+      } while(this.locations.includes(random))
+      return random
     },
     restart() {
       this.head.direction = 4
