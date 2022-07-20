@@ -81,7 +81,7 @@ export default {
         if(this.locations.includes(futureX + futureY*this.settings.width)) {
           this.gameOver = true
           this.paused = true
-          this.highscore = this.bodySize - 3 > this.highscore ? this.bodySize - 3 : this.highscore
+          this.highscore = this.bodySize - 3 > this.highscore ? (this.bodySize - 3) * 50 : this.highscore
           this.$emit('highscore',(this.highscore))
           return
         }
@@ -94,7 +94,7 @@ export default {
 
         if(this.apple === this.head.xPosition + this.head.yPosition*this.settings.width) {
           this.bodySize++
-          this.$emit('score', (this.bodySize - 3))
+          this.$emit('score', ((this.bodySize - 3) * 50))
           this.apple = this.getRandomPosOnBoard()
         }
       }
