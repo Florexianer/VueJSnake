@@ -13,6 +13,9 @@
     <div class="overlay" v-else-if="gameOver">
 
       <div style="height: 40px">
+        <span class="material-icons" id="closeIcon" @click="restart">
+          close
+        </span>
         Game Over
       </div>
     </div>
@@ -100,6 +103,17 @@ export default {
     getRandomPosOnBoard() {
       return Math.floor(Math.random() * this.settings.width * this.settings.width)+1
     },
+    restart() {
+      this.head.direction = 4
+      this.head.xPosition = 4
+      this.head.yPosition = 4
+      this.head.prevDir = 4
+      this.paused = false
+      this.gameOver = false
+      this.locations = []
+      this.apple = null
+      this.bodySize = 3
+    },
   },
 
   mounted() {
@@ -140,6 +154,16 @@ export default {
 </script>
 
 <style scoped>
+#closeIcon {
+  position: absolute;
+  right: 5%;
+  top: 5%;
+}
+
+#closeIcon:hover {
+  cursor: pointer;
+}
+
 #container {
   width: 700px;
   height: 700px;
