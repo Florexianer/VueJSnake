@@ -1,7 +1,9 @@
 <template>
   <div>
-    Snake Game:
-    <game-field/>
+    Score: {{score}}
+    <br>
+    High-score: {{highscore}}
+    <game-field @highscore="getHighscore" @score="getScore"/>
   </div>
 </template>
 
@@ -9,7 +11,23 @@
 import GameField from "@/components/GameField";
 export default {
 name: "GameView",
-  components: {GameField}
+  components: {GameField},
+  data() {
+    return {
+      highscore: 0,
+      score: 0
+    }
+  },
+
+  methods: {
+    getHighscore(highscore) {
+      console.log(highscore)
+      this.highscore = parseInt(highscore)
+    },
+    getScore(score) {
+      this.score = parseInt(score)
+    }
+  }
 }
 </script>
 
