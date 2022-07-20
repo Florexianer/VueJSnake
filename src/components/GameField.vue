@@ -86,7 +86,7 @@ export default {
           return
         }
 
-        //calculates which direction to go and makes it impossible to go to where you were previously (cannot make a 180 deg turn)
+        //calculates which direction to go
         this.head.yPosition = futureY
         this.head.xPosition = futureX
         this.head.prevDir = this.head.direction
@@ -130,6 +130,7 @@ export default {
         this.gameLoop()
       }
       //change direction depending on key pressed
+      //the && makes it impossible to go to where you were previously (cannot make a 180 deg turn)
       if ((event.key === 'w' || event.key === 'ArrowUp') && this.head.prevDir!==2) {
         this.head.direction = 0
       }
