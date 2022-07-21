@@ -41,7 +41,7 @@ export default {
       head: {
         prevDir : 4,
         direction : 4,
-        xPosition: 4,
+        xPosition: 5,
         yPosition: 4,
       },
       bodySize: 3,
@@ -109,7 +109,7 @@ export default {
     },
     restart() {
       this.head.direction = 4
-      this.head.xPosition = 4
+      this.head.xPosition = 5
       this.head.yPosition = 4
       this.head.prevDir = 4
       this.paused = false
