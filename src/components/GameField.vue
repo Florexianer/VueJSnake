@@ -81,7 +81,7 @@ export default {
         if(this.locations.includes(futureX + futureY*this.settings.width)) {
           this.gameOver = true
           this.paused = true
-          this.highscore = this.bodySize - 3 > this.highscore ? (this.bodySize - 3) * 50 : this.highscore
+          this.highscore = (this.bodySize - 3) * 50 > this.highscore ? (this.bodySize - 3) * 50 : this.highscore
           this.$emit('highscore',(this.highscore))
           return
         }
@@ -108,6 +108,7 @@ export default {
       return random
     },
     restart() {
+      this.$emit('score',0)
       this.head.direction = 4
       this.head.xPosition = 5
       this.head.yPosition = 4
