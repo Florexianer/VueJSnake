@@ -68,6 +68,11 @@ export default {
         const futureX = this.head.direction === 1 ? this.head.xPosition+1 :
             this.head.direction === 3 ? this.head.xPosition - 1 : this.head.xPosition
 
+        if(futureX < 1 || futureX > 9 || futureY < 0 || futureY > 8) {
+          this.endGame()
+          return
+        }
+
         //adds a bodypart to last position where head was if the real length doesnt match the desired length
         if(this.bodySize === this.locations.length) {
           this.locations.shift()
@@ -79,10 +84,7 @@ export default {
         }
 
         if(this.locations.includes(futureX + futureY*this.settings.width)) {
-          this.gameOver = true
-          this.paused = true
-          this.highscore = (this.bodySize - 3) * 50 > this.highscore ? (this.bodySize - 3) * 50 : this.highscore
-          this.$emit('highscore',(this.highscore))
+          this.endGame()
           return
         }
 
@@ -119,6 +121,12 @@ export default {
       this.apple = null
       this.bodySize = 3
     },
+    endGame() {
+      this.gameOver = true
+      this.paused = true
+      this.highscore = (this.bodySize - 3) * 50 > this.highscore ? (this.bodySize - 3) * 50 : this.highscore
+      this.$emit('highscore',(this.highscore))
+    }
   },
 
   mounted() {
